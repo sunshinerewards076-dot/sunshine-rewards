@@ -77,7 +77,7 @@ async function proofs(){
   const s=await DB.collection("submissions").where("status","==",PF).get();
   const l=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.t-a.t);
   return fbar(PF,"p")+(l.length?l.map(x=>{const o=OFFERS[x.task]||[x.task,0];return `<div class="card"><div class="row"><div><b>${E(o[0])}</b> <span class="chip ${x.status}">${x.status}</span><div class="mute sm">${E(x.email)}</div></div><b>₹${fmt(o[1])}</b></div>
-  <pre>${E(x.proof)}</pre><div class="mute sm" style="margin-top:6px">${when(x.t)}</div>
+  <pre>${E(x.proof)}</pre>${x.shot?`<img src="${x.shot}" alt="Screenshot" style="max-width:100%;max-height:260px;border-radius:10px;margin-top:8px;cursor:zoom-in" onclick="zoom(this.src)">`:`<p class="mute sm" style="margin-top:6px">No screenshot</p>`}<div class="mute sm" style="margin-top:6px">${when(x.t)}</div>
   ${x.status==="pending"?`<div class="acts"><button class="b g" onclick="approve('${x.id}',this)">Approve</button><button class="b r" onclick="rejectProof('${x.id}',this)">Reject</button></div>`:""}</div>`}).join(""):'<p class="mute">Nothing here.</p>');
 }
 async function approve(id,btn){
@@ -109,6 +109,7 @@ async function wd(){
   <div class="acts"><button class="b l" onclick="copy('${E(x.kind==="bank"?x.acc:x.upi)}')">Copy ${x.kind==="bank"?"account":"UPI"}</button>
   ${x.status==="pending"?`<button class="b g" onclick="paid('${x.id}',this)">Mark paid</button><button class="b r" onclick="refund('${x.id}',this)">Reject and refund</button>`:""}</div></div>`).join(""):'<p class="mute">Nothing here.</p>');
 }
+function zoom(src){const o=document.createElement("div");o.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:30;display:flex;align-items:center;justify-content:center;padding:10px;cursor:zoom-out";o.innerHTML=`<img src="${src}" style="max-width:100%;max-height:100%;border-radius:8px">`;o.onclick=()=>o.remove();document.body.appendChild(o)}
 const copy=v=>navigator.clipboard?.writeText(v).then(()=>toast("Copied"),()=>toast(v));
 async function paid(id,btn){
   if(!confirm("Mark as paid? Only do this after you sent the money."))return;btn.disabled=true;

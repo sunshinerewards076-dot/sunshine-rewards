@@ -282,19 +282,27 @@ function offer(id){
   ${o.steps.map((st,i)=>`<div class="tk"><div class="row"><h3 style="font-size:22px">${i+1}. ${E(st.t)}</h3><div style="text-align:right">${i===L?`<b>${fmt(o.reward)}</b><br>${ch}`:""}</div></div><hr>${st.items.map(x=>`<div class="li">${E(x)}</div>`).join("")}
    ${i===0&&o.code?`<div class="code" style="font-size:16px"><span>Code: ${E(o.code)}</span><button class="btn sm2" onclick="copy('${E(o.code)}')">Copy</button></div>`:""}</div>`).join("")}
   <div style="height:80px"></div>
-  <div class="fx"><a class="btn" href="${E(o.link)}" target="_blank" rel="noopener">Install Now 🔗</a>${pd||ap?"":`<button class="btn" style="background:#2B1600;color:#fff;border-bottom-color:#000" onclick="proofSheet('${id}')">Upload Proof</button>`}</div>`;
+  <div class="fx">${ap?`<button class="btn" disabled>Task completed ✓</button>`:pd?`<button class="btn" disabled>Proof submitted. In review</button>`:(ls("sr_started")||{})[id]?`<a class="btn" style="flex:.8" href="${E(o.link)}" target="_blank" rel="noopener">Open link 🔗</a><button class="btn" style="background:#2B1600;color:#fff;border-bottom-color:#000" onclick="proofSheet('${id}')">⬆ Upload Proof</button>`:`<button class="btn" onclick="startTask('${id}')">⚡ Start Task</button>`}</div>`;
 }
+function startTask(id){const st=ls("sr_started")||{};st[id]=1;ls("sr_started",st);open(OFFERS.find(x=>x.id===id).link,"_blank");draw()}
+const shot=(f,q)=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",q))};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(f)});
 function proofSheet(id){openSheet(`<h2>Upload Proof</h2><p class="mute sm">${E(nm(id))}: add the details you used to register.</p>
  <label for="pe">Registered Email ID</label><input id="pe" type="email" placeholder="Enter registered email ID" autocomplete="email">
  <label for="pm">Registered Mobile Number</label><input id="pm" inputmode="numeric" maxlength="10" placeholder="Enter registered mobile number">
- <label for="pl">Screenshot link (optional)</label><input id="pl" placeholder="Paste screenshot link">
- <button class="btn" onclick="sendProof('${id}')">Submit</button><button class="btn" style="background:#fff;border:2px solid var(--line)" onclick="closeSheet()">Close</button>`)}
+ <label for="pf">Upload Screenshot (last page of the task)</label><input id="pf" type="file" accept="image/*" onchange="$('#pfn').textContent=this.files[0]?this.files[0].name+' (1/1)':'Upload (0/1)'"><p id="pfn" class="mute sm" style="margin:-6px 0 6px">Upload (0/1)</p>
+ <button class="btn" id="psb" onclick="sendProof('${id}')">Submit</button><button class="btn" style="background:#fff;border:2px solid var(--line)" onclick="closeSheet()">Close</button>`)}
 async function sendProof(id){
-  const e=$("#pe").value.trim(),m=$("#pm").value.trim(),l=$("#pl").value.trim();
+  const e=$("#pe").value.trim(),m=$("#pm").value.trim(),f=$("#pf").files[0];
   if(!/^\S+@\S+\.\S+$/.test(e))return toast("Enter a valid email ID.");
   if(!/^\d{10}$/.test(m))return toast("Enter a 10 digit mobile number.");
-  await addRec("submissions",{uid:U.id,email:U.email,task:id,proof:"Email: "+e+" | Mobile: "+m+(l?" | Link: "+l:""),status:"pending",t:Date.now()});
-  closeSheet();draw();toast("Proof submitted. We will review it soon.");
+  if(!f)return toast("Upload your screenshot first.");
+  const b=$("#psb");b.disabled=true;b.textContent="Uploading...";
+  try{
+    let d=await shot(f,.6);if(d.length>700000)d=await shot(f,.4);
+    if(d.length>900000)throw new Error("big");
+    await addRec("submissions",{uid:U.id,email:U.email,task:id,proof:"Email: "+e+" | Mobile: "+m,shot:d,status:"pending",t:Date.now()});
+    closeSheet();draw();toast("Proof submitted. We will review it soon.");
+  }catch(x){b.disabled=false;b.textContent="Submit";toast("Could not upload. Try a smaller screenshot.")}
 }
 function shareOffer(id){open("https://wa.me/?text="+encodeURIComponent("Earn real money on Sunshine Rewards with the "+nm(id)+" offer: "+location.origin+location.pathname+"?ref="+U.code),"_blank")}
 
@@ -372,7 +380,7 @@ const profile=()=>{
   const wd=wds.reduce((a,w)=>a+(w.amt||0),0),row=(i,t,f,x="")=>`<button class="set" onclick="${f}"><span class="ic">${i}</span><b>${t}</b>${x}<em>›</em></button>`;
   return hd("Profile")+`<div class="tk" style="--n:62px"><div style="display:flex;gap:12px;align-items:center"><img class="av" src="${E(U.photo||AV)}" alt="" referrerpolicy="no-referrer"><div><b>${E(U.name)}</b><div class="mute sm">${E(U.email)}</div></div></div><hr>
   <div class="row c"><div style="flex:1"><span class="coin">₹</span> <b style="font-size:22px">${fmt(U.earned||0)}</b><div class="mute sm">Total Earned</div></div><div style="flex:1;border-left:2px dotted var(--line)"><span class="coin">₹</span> <b style="font-size:22px">${fmt(wd)}</b><div class="mute sm">Total Withdrawn</div></div></div></div>
-  <h2 style="font-size:26px;margin:4px 0 10px">Settings</h2>${row("⭐","Rate Us","toast('Rating opens after the Play Store launch')")}${row("🎫","My Tickets","tickets()")}${row("✈️","Join Telegram","tg()")}${row("💬","Join WhatsApp Channel","wch()")}${row("🧭","How to use app","tour(1)")}${row("❓","Help &amp; Faq","go('faq')")}${row("🔒","Privacy Policy","legal('p')")}${row("📄","Terms of Service","legal('t')")}${row("⎋","Logout","logout()")}<p class="c mute sm" style="margin:14px 0">Sunshine Rewards v9</p>`;
+  <h2 style="font-size:26px;margin:4px 0 10px">Settings</h2>${row("⭐","Rate Us","toast('Rating opens after the Play Store launch')")}${row("🎫","My Tickets","tickets()")}${row("✈️","Join Telegram","tg()")}${row("💬","Join WhatsApp Channel","wch()")}${row("🧭","How to use app","tour(1)")}${row("❓","Help &amp; Faq","go('faq')")}${row("🔒","Privacy Policy","legal('p')")}${row("📄","Terms of Service","legal('t')")}${row("⎋","Logout","logout()")}<p class="c mute sm" style="margin:14px 0">Sunshine Rewards v10</p>`;
 };
 const faq=()=>hd("Help &amp; FAQ")+`<section class="sh">${FAQ.map(([q,a],i)=>`<button class="fq" onclick="fq=fq===${i}?-1:${i};draw()"><span>${i+1}. ${q}</span><span>${fq===i?"⌄":"›"}</span></button>${fq===i?`<div class="fa">${a}</div>`:""}`).join("")}
  <p class="c" style="font-weight:800;margin-top:10px">Contact Us On</p><div class="fx" style="position:static;transform:none;width:auto;margin-top:8px"><button class="btn" onclick="${SUPPORT_EMAIL?`location.href='mailto:${SUPPORT_EMAIL}'`:"toast('Support email coming soon')"}">On Mail</button><button class="btn" onclick="tg()">On Telegram</button></div></section>`;
