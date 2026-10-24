@@ -4,156 +4,237 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#FF9F1C">
+<meta name="theme-color" content="#E8590C">
 <title>Sunshine Admin</title>
 <style>
-:root{--a:#FF9F1C;--d:#E8590C;--ink:#2B1600;--mute:#7A6A55;--line:#F1DEB0;--bg:#FFF8E6}
+:root{--a:#FF9F1C;--d:#E8590C;--ink:#2B1600;--mute:#7A6A55;--line:#F1DEB0;--bg:#FFF6E0;--ok:#1E8A3A;--bad:#D6372E}
 *{box-sizing:border-box;margin:0}
 [hidden]{display:none!important}
-body{font:15px/1.45 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:40px}
+body{font:15px/1.45 system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:60px}
+button{font:inherit;cursor:pointer;color:inherit}
 .box{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
-.box h1{font-size:30px}
-button{font:inherit;cursor:pointer}
-.b{border:0;border-radius:12px;padding:10px 16px;font-weight:700;background:linear-gradient(180deg,#FFC93C,var(--a));color:var(--ink)}
-.b.g{background:#2E9E3A;color:#fff}.b.r{background:#D6372E;color:#fff}.b.l{background:#fff;border:1.5px solid var(--line)}
-.b:disabled{opacity:.5}
+.box h1{font-size:32px}
+.b{border:0;border-radius:12px;padding:11px 16px;font-weight:700;background:linear-gradient(180deg,#FFC93C,var(--a));color:var(--ink);min-height:44px}
+.b.g{background:var(--ok);color:#fff}.b.r{background:var(--bad);color:#fff}.b.l{background:#fff;border:1.5px solid var(--line)}.b.s{padding:6px 12px;min-height:34px;font-size:13px}
+.b:disabled{opacity:.5;cursor:default}
+.b:active{transform:scale(.97)}
 header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(135deg,#FFB300,var(--d));color:#fff;position:sticky;top:0;z-index:5}
-header b{flex:1;font-size:18px}header small{opacity:.9}
-#tabs{display:flex;gap:6px;padding:10px 12px;overflow:auto}
-#tabs button{border:0;border-radius:99px;padding:9px 16px;font-weight:700;background:#fff;border:1.5px solid var(--line);white-space:nowrap}
+header b{flex:1;font-size:19px}header small{opacity:.95;font-size:12px;max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tabs{display:flex;gap:6px;padding:10px 12px;overflow:auto;position:sticky;top:60px;background:var(--bg);z-index:4}
+#tabs button{border-radius:99px;padding:9px 16px;font-weight:700;background:#fff;border:1.5px solid var(--line);white-space:nowrap}
 #tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-#view{max-width:720px;margin:0 auto;padding:0 12px}
+#view{max-width:760px;margin:0 auto;padding:4px 12px}
 .card{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .mute{color:var(--mute)}.sm{font-size:13px}
-.st{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.st .card{margin:0;text-align:center}.st b{display:block;font-size:26px}
-.chip{display:inline-block;border-radius:8px;padding:1px 10px;font-size:12px;font-weight:700;background:#FFF0B3;color:#8A5A00}
-.chip.approved,.chip.paid{background:#D9F5DF;color:#1E8A3A}.chip.rejected{background:#FFDADA;color:#C00}
-.acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px;font:inherit;margin-bottom:12px;background:#fff}
-pre{white-space:pre-wrap;word-break:break-word;font:13px/1.4 ui-monospace,Consolas,monospace;background:#FFF4DC;border-radius:10px;padding:8px;margin-top:8px}
-#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:90%;text-align:center}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px;text-align:left;width:100%}
+.stat b{display:block;font-size:26px}.stat span{color:var(--mute);font-size:13px}
+.stat.hot{background:linear-gradient(135deg,#FFE9A8,#fff)}
+.ur{display:flex;gap:10px;align-items:center;min-width:0}.ur>div{min-width:0}.ur b,.ur .sm{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.av{width:44px;height:44px;border-radius:12px;object-fit:cover;background:#FFE7AE;flex:none}
+.chip{display:inline-block;border-radius:8px;padding:2px 10px;font-size:12px;font-weight:700;background:#FFF0B3;color:#8A5A00;white-space:nowrap}
+.chip.approved,.chip.paid{background:#D9F5DF;color:var(--ok)}.chip.rejected{background:#FFDADA;color:#C00}
+.task{display:flex;justify-content:space-between;align-items:center;background:#FFF4DC;border-radius:12px;padding:10px 12px;margin:12px 0 8px;font-size:16px}
+.kv{width:100%;border-collapse:collapse;font-size:14px}.kv td{padding:6px 0;border-bottom:1px solid #F7ECCB;vertical-align:top}.kv td:first-child{color:var(--mute);width:42%;padding-right:8px}.kv tr:last-child td{border:0}
+.cp{cursor:copy;font-weight:700;word-break:break-all}
+.shot{display:block;width:100%;max-height:300px;object-fit:contain;background:#FFF4DC;border-radius:12px;margin-top:10px;cursor:zoom-in}
+.acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.acts .b{flex:1;min-width:120px}
+.chips{display:flex;gap:8px;margin:4px 0 12px;flex-wrap:wrap}
+.chips button{border-radius:99px;padding:8px 14px;font-weight:700;background:#fff;border:1.5px solid var(--line);min-height:40px}.chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;font:inherit;margin-bottom:12px;background:#fff}
+.u{cursor:pointer;width:100%;text-align:left;display:block;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:12px;margin-bottom:10px}
+#md{position:fixed;inset:0;background:rgba(30,15,0,.6);z-index:20;display:none;align-items:flex-end;justify-content:center}
+#md.open{display:flex}
+#mp{background:#fff;width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 16px 28px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:40;max-width:90%;text-align:center;font-weight:600}
 #toast.on{opacity:1}
+h3{font-size:17px;margin:16px 0 8px}
 </style>
 </head>
 <body>
-<div id="login" class="box"><h1>Sunshine Admin</h1><p class="mute">Only the admin Google account can enter.</p><button class="b" onclick="login()">Sign in with Google</button><p id="err" style="color:#C00;font-weight:700"></p></div>
+<div id="login" class="box"><h1>Sunshine Admin</h1><p class="mute">Only the admin Google account can enter.</p><button class="b" data-a="login">Sign in with Google</button><p id="err" style="color:#C00;font-weight:700"></p></div>
 <main id="app" hidden>
-  <header><b>Sunshine Admin</b><small id="who"></small><button class="b l" onclick="out()">Logout</button></header>
+  <header><b>Sunshine Admin</b><small id="who"></small><button class="b l s" data-a="logout">Logout</button></header>
   <div id="tabs"></div>
   <section id="view"></section>
 </main>
+<div id="md"><div id="mp"></div></div>
 <div id="toast" role="status"></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 const FB={apiKey:"AIzaSyBoomsal7jbIuLTvBBIUM0TgDwfRY0sbdY",authDomain:"sunshine-rewards-eadbf.firebaseapp.com",projectId:"sunshine-rewards-eadbf",storageBucket:"sunshine-rewards-eadbf.firebasestorage.app",messagingSenderId:"198715788076",appId:"1:198715788076:web:c442ef15ab8da4ecdafa89"};
-/* task id -> [name, reward]. Keep this in sync with OFFERS in the app. */
+/* task id -> [name, reward]. Keep in sync with OFFERS in the app. */
 const OFFERS={"5paisa":["5paisa",260],angelone:["Angel One",120],stablemoney:["Stable Money",200],phonepe:["PhonePe",32],airtelbank:["Airtel Payments Bank",100],navi:["Navi",5],hdfc:["HDFC Securities",40],cashkaro:["CashKaro",2]};
 const REF=0.05;
 const $=s=>document.querySelector(s);
 const E=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=n=>Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2});
-const when=t=>t?new Date(t).toLocaleString():"";
-let DB,AUTH,tab="dash",PF="pending",WF="pending",users=[],q="";
-function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),2800)}
+const when=t=>t?new Date(t).toLocaleString("en-IN",{day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit"}):"-";
+const AVD="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" fill="#FFE7AE"/><circle cx="24" cy="19" r="8" fill="#FF9F1C"/><path d="M8 46c0-9 7-15 16-15s16 6 16 15z" fill="#E8590C"/></svg>');
+let DB,AUTH,tab="dash",PF="pending",WF="pending",users=[],UM={},wds=[],lu=0,q="";
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),3000)}
+const openModal=h=>{$("#mp").innerHTML=h;$("#md").classList.add("open")};
+const closeModal=()=>$("#md").classList.remove("open");
 const TABS=[["dash","Dashboard"],["proofs","Proofs"],["wd","Withdrawals"],["users","Users"]];
-function go(t){tab=t;draw()}
-async function draw(){
-  $("#tabs").innerHTML=TABS.map(([k,l])=>`<button class="${k===tab?"on":""}" onclick="go('${k}')">${l}</button>`).join("");
-  $("#view").innerHTML='<p class="mute" style="padding:20px 0">Loading...</p>';
-  try{$("#view").innerHTML=await({dash,proofs,wd,usersView})[tab]()}catch(e){$("#view").innerHTML=`<p style="color:#C00;padding:20px 0">${E(e.message)}</p>`}
+const cp=(v,t)=>`<span class="cp" data-a="copy" data-v="${E(v)}">${E(t??v)}</span>`;
+const uinfo=uid=>{const u=UM[uid];return `<div class="ur"><img class="av" src="${E(u&&u.photo||AVD)}" alt="" referrerpolicy="no-referrer"><div><b>${E(u?u.name:"Unknown user")}</b><span class="sm mute">${E(u?u.email:"")}</span><span class="sm mute">ID ${E(String(uid).slice(0,10))}</span></div></div>`};
+
+async function loadUsers(force){
+  if(!force&&Date.now()-lu<30000)return;
+  const [u,w]=await Promise.all([DB.collection("users").limit(1000).get(),DB.collection("withdrawals").limit(1000).get()]);
+  users=u.docs.map(d=>({id:d.id,...d.data()}));UM={};users.forEach(x=>UM[x.id]=x);
+  wds=w.docs.map(d=>({id:d.id,...d.data()}));lu=Date.now();
 }
-async function dash(){
-  const [u,p,w]=await Promise.all([DB.collection("users").limit(1000).get(),DB.collection("submissions").where("status","==","pending").get(),DB.collection("withdrawals").where("status","==","pending").get()]);
-  let bal=0;u.forEach(d=>bal+=d.data().uc||0);let owe=0;w.forEach(d=>owe+=d.data().amt||0);
-  return `<div class="st"><div class="card"><b>${u.size}</b><span class="mute sm">Users</span></div><div class="card"><b>${fmt(bal)}</b><span class="mute sm">Total user balance (SC)</span></div>
-  <div class="card"><b>${p.size}</b><span class="mute sm">Pending proofs</span></div><div class="card"><b>${w.size}</b><span class="mute sm">Pending withdrawals (${fmt(owe)} SC)</span></div></div>`;
+async function draw(force){
+  $("#tabs").innerHTML=TABS.map(([k,l])=>`<button class="${k===tab?"on":""}" data-a="tab" data-id="${k}">${l}</button>`).join("");
+  $("#view").innerHTML='<p class="mute" style="padding:24px 0">Loading...</p>';
+  try{await loadUsers(force);$("#view").innerHTML=await VIEWS[tab]();if(tab==="users")showUsers()}
+  catch(e){$("#view").innerHTML=`<div class="card" style="color:#C00"><b>Something went wrong</b><p>${E(e.message)}</p><button class="b" data-a="refresh">Try again</button></div>`}
 }
-const fbar=(cur,fn)=>`<div class="acts" style="margin:0 0 12px">${["pending","approved","rejected","paid"].filter(x=>fn!=="wd"||x!=="approved").filter(x=>fn==="wd"||x!=="paid").map(x=>`<button class="b ${x===cur?"":"l"}" onclick="${fn==="wd"?"WF":"PF"}='${x}';draw()">${x}</button>`).join("")}</div>`;
-async function proofs(){
-  const s=await DB.collection("submissions").where("status","==",PF).get();
+const VIEWS={
+ async dash(){
+  const p=await DB.collection("submissions").where("status","==","pending").get();
+  const pw=wds.filter(w=>w.status==="pending"),paid=wds.filter(w=>w.status==="paid"),day=new Date().setHours(0,0,0,0);
+  const bal=users.reduce((a,u)=>a+(u.uc||0),0);
+  return `<div class="stats">
+  <button class="stat" data-a="tab" data-id="users"><b>${users.length}</b><span>Total users</span></button>
+  <button class="stat" data-a="tab" data-id="users"><b>${users.filter(u=>(u.joined||0)>=day).length}</b><span>New today</span></button>
+  <button class="stat ${p.size?"hot":""}" data-a="tab" data-id="proofs"><b>${p.size}</b><span>Pending proofs</span></button>
+  <button class="stat ${pw.length?"hot":""}" data-a="tab" data-id="wd"><b>${pw.length}</b><span>Pending withdrawals (${fmt(pw.reduce((a,w)=>a+(w.amt||0),0))} SC)</span></button>
+  <button class="stat" data-a="tab" data-id="users"><b>${fmt(bal)}</b><span>Total user balance (SC)</span></button>
+  <button class="stat" data-a="tab" data-id="wd"><b>${fmt(paid.reduce((a,w)=>a+(w.amt||0),0))}</b><span>Total paid out (SC)</span></button></div>
+  <button class="b" style="width:100%" data-a="refresh">Refresh data</button>`;
+ },
+ async proofs(){
+  const s=await DB.collection("submissions").where("status","==",PF).limit(100).get();
   const l=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.t-a.t);
-  return fbar(PF,"p")+(l.length?l.map(x=>{const o=OFFERS[x.task]||[x.task,0];return `<div class="card"><div class="row"><div><b>${E(o[0])}</b> <span class="chip ${x.status}">${x.status}</span><div class="mute sm">${E(x.email)}</div></div><b>₹${fmt(o[1])}</b></div>
-  <pre>${E(x.proof)}</pre>${x.shot?`<img src="${x.shot}" alt="Screenshot" style="max-width:100%;max-height:260px;border-radius:10px;margin-top:8px;cursor:zoom-in" onclick="zoom(this.src)">`:`<p class="mute sm" style="margin-top:6px">No screenshot</p>`}<div class="mute sm" style="margin-top:6px">${when(x.t)}</div>
-  ${x.status==="pending"?`<div class="acts"><button class="b g" onclick="approve('${x.id}',this)">Approve</button><button class="b r" onclick="rejectProof('${x.id}',this)">Reject</button></div>`:""}</div>`}).join(""):'<p class="mute">Nothing here.</p>');
+  return chips(["pending","approved","rejected"],PF,"pf")+(l.length?l.map(proofCard).join(""):'<div class="card mute">No '+PF+' proofs.</div>');
+ },
+ async wd(){
+  const l=wds.filter(w=>w.status===WF).sort((a,b)=>b.t-a.t);
+  return chips(["pending","paid","rejected"],WF,"wf")+(l.length?l.map(wCard).join(""):'<div class="card mute">No '+WF+' withdrawals.</div>');
+ },
+ async users(){return `<input id="q" placeholder="Search by name, email or referral code" value="${E(q)}" autocomplete="off"><p class="sm mute" id="qc" style="margin:-4px 0 10px"></p><div id="ul"></div>`}
+};
+const chips=(arr,cur,a)=>`<div class="chips">${arr.map(x=>`<button class="${x===cur?"on":""}" data-a="${a}" data-id="${x}">${x[0].toUpperCase()+x.slice(1)}</button>`).join("")}</div>`;
+function proofCard(x){
+  const o=OFFERS[x.task]||[x.task,0],u=UM[x.uid]||{};
+  const det=String(x.proof||"").split(" | ").map(p=>{const i=p.indexOf(":");return i<0?["Note",p]:[p.slice(0,i),p.slice(i+1).trim()]});
+  return `<div class="card"><div class="row">${uinfo(x.uid)}<span class="chip ${x.status}">${x.status}</span></div>
+  <div class="task"><b>${E(o[0])}</b><b>₹${fmt(o[1])}</b></div>
+  <table class="kv">${det.map(([k,v])=>`<tr><td>${E(k)}</td><td>${cp(v)}</td></tr>`).join("")}
+  <tr><td>Google email</td><td>${cp(x.email||u.email||"")}</td></tr><tr><td>Submitted</td><td>${when(x.t)}</td></tr><tr><td>User balance</td><td>${fmt(u.uc)} SC</td></tr></table>
+  ${x.shot?`<img class="shot" data-a="zoom" src="${x.shot}" alt="Screenshot proof">`:'<p class="mute sm" style="margin-top:10px">No screenshot uploaded.</p>'}
+  <div class="acts">${x.status==="pending"?`<button class="b g" data-a="approve" data-id="${x.id}">Approve ₹${fmt(o[1])}</button><button class="b r" data-a="reject" data-id="${x.id}">Reject</button>`:""}<button class="b l" data-a="user" data-id="${x.uid}">View user</button></div></div>`;
 }
-async function approve(id,btn){
-  btn.disabled=true;
+function wCard(w){
+  const u=UM[w.uid]||{},bank=w.kind==="bank",main=bank?w.acc:w.upi;
+  return `<div class="card"><div class="row">${uinfo(w.uid)}<span class="chip ${w.status}">${w.status}</span></div>
+  <div class="task"><b>${bank?"Bank transfer":"UPI transfer"}</b><b>₹${fmt(w.amt)}</b></div>
+  <table class="kv"><tr><td>Name</td><td>${cp(w.name)}</td></tr><tr><td>${bank?"Account number":"UPI ID"}</td><td>${cp(main)}</td></tr>${bank?`<tr><td>IFSC</td><td>${cp(w.ifsc)}</td></tr>`:""}
+  <tr><td>Amount</td><td>${cp(w.amt,"₹"+fmt(w.amt))}</td></tr><tr><td>Google email</td><td>${cp(w.email||u.email||"")}</td></tr><tr><td>Requested</td><td>${when(w.t)}</td></tr><tr><td>User balance now</td><td>${fmt(u.uc)} SC</td></tr></table>
+  <div class="acts">${w.status==="pending"?`<button class="b g" data-a="paid" data-id="${w.id}">Mark paid</button><button class="b r" data-a="refund" data-id="${w.id}">Reject and refund</button>`:""}<button class="b l" data-a="user" data-id="${w.uid}">View user</button></div></div>`;
+}
+function showUsers(){
+  const k=q.trim().toLowerCase(),l=[...users].sort((a,b)=>(b.joined||0)-(a.joined||0)).filter(u=>!k||[u.name,u.email,u.code].some(v=>String(v||"").toLowerCase().includes(k)));
+  $("#qc").textContent=l.length+" user"+(l.length===1?"":"s");
+  $("#ul").innerHTML=l.slice(0,150).map(u=>`<button class="u" data-a="user" data-id="${u.id}"><div class="row">${uinfo(u.id)}<div style="text-align:right;flex:none"><b>${fmt(u.uc)} SC</b><div class="sm mute">earned ${fmt(u.earned)}</div></div></div><div class="sm mute" style="margin-top:6px">Joined ${when(u.joined)}</div></button>`).join("")||'<div class="card mute">No users found.</div>';
+}
+
+/* ---- actions ---- */
+const ACT={
+ async login(){$("#err").textContent="";try{await AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider())}catch(e){$("#err").textContent="Sign-in failed. Try again."}},
+ logout(){AUTH.signOut()},
+ tab(id){tab=id;draw()},
+ pf(id){PF=id;draw()},
+ wf(id){WF=id;draw()},
+ refresh(){draw(true)},
+ close(){closeModal()},
+ copy(id,t){const v=t.dataset.v;navigator.clipboard?navigator.clipboard.writeText(v).then(()=>toast("Copied: "+v),()=>toast(v)):toast(v)},
+ zoom(id,t){openModal(`<img src="${t.src}" alt="Screenshot" style="width:100%;border-radius:12px"><button class="b" style="width:100%;margin-top:12px" data-a="close">Close</button>`)},
+ async approve(id,t){
+  const sref=DB.collection("submissions").doc(id),s=(await sref.get()).data(),reward=(OFFERS[s.task]||[0,0])[1];
+  if(!reward)throw new Error("Unknown task. Add it to OFFERS in admin.html.");
+  if(!confirm("Approve and credit ₹"+reward+" to "+((UM[s.uid]||{}).name||"this user")+"?"))return;
+  t.disabled=true;
   try{
-    const sref=DB.collection("submissions").doc(id),s=(await sref.get()).data(),reward=(OFFERS[s.task]||[0,0])[1];
-    if(!reward)throw new Error("Unknown task. Add it to OFFERS in admin.html.");
     const uref=DB.collection("users").doc(s.uid),by=(await uref.get()).data().by;let rref=null;
     if(by){const r=await DB.collection("users").where("code","==",by).limit(1).get();if(!r.empty&&r.docs[0].id!==s.uid)rref=r.docs[0].ref}
-    await DB.runTransaction(async t=>{
-      const a=await t.get(sref);if(a.data().status!=="pending")throw new Error("Already handled.");
-      const u=(await t.get(uref)).data(),rr=rref?(await t.get(rref)).data():null,up={uc:(u.uc||0)+reward,earned:(u.earned||0)+reward};
-      t.update(sref,{status:"approved",reward,at:Date.now()});
-      if(rr){const b=Math.round(reward*REF*100)/100;t.update(rref,{uc:(rr.uc||0)+b,earned:(rr.earned||0)+b,...(u.refCounted?{}:{refs:(rr.refs||0)+1})});up.refCounted=true}
-      t.update(uref,up);
+    await DB.runTransaction(async tx=>{
+      const a=await tx.get(sref);if(a.data().status!=="pending")throw new Error("Already handled.");
+      const u=(await tx.get(uref)).data(),rr=rref?(await tx.get(rref)).data():null,up={uc:(u.uc||0)+reward,earned:(u.earned||0)+reward};
+      tx.update(sref,{status:"approved",reward,at:Date.now()});
+      if(rr){const b=Math.round(reward*REF*100)/100;tx.update(rref,{uc:(rr.uc||0)+b,earned:(rr.earned||0)+b,...(u.refCounted?{}:{refs:(rr.refs||0)+1})});up.refCounted=true}
+      tx.update(uref,up);
     });
-    toast("Approved. ₹"+reward+" credited.");draw();
-  }catch(e){toast(e.message);btn.disabled=false}
-}
-async function rejectProof(id,btn){
-  if(!confirm("Reject this proof?"))return;btn.disabled=true;
-  try{await DB.collection("submissions").doc(id).update({status:"rejected",at:Date.now()});toast("Rejected.");draw()}catch(e){toast(e.message);btn.disabled=false}
-}
-async function wd(){
-  const s=await DB.collection("withdrawals").where("status","==",WF).get();
-  const l=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.t-a.t);
-  return fbar(WF,"wd")+(l.length?l.map(x=>`<div class="card"><div class="row"><div><b>${x.kind==="bank"?"Bank":"UPI"} transfer</b> <span class="chip ${x.status}">${x.status}</span><div class="mute sm">${E(x.email)}</div></div><b>₹${fmt(x.amt)}</b></div>
-  <pre>Name: ${E(x.name)}\n${x.kind==="bank"?"Account: "+E(x.acc)+"\nIFSC: "+E(x.ifsc):"UPI: "+E(x.upi)}</pre><div class="mute sm" style="margin-top:6px">${when(x.t)}</div>
-  <div class="acts"><button class="b l" onclick="copy('${E(x.kind==="bank"?x.acc:x.upi)}')">Copy ${x.kind==="bank"?"account":"UPI"}</button>
-  ${x.status==="pending"?`<button class="b g" onclick="paid('${x.id}',this)">Mark paid</button><button class="b r" onclick="refund('${x.id}',this)">Reject and refund</button>`:""}</div></div>`).join(""):'<p class="mute">Nothing here.</p>');
-}
-function zoom(src){const o=document.createElement("div");o.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:30;display:flex;align-items:center;justify-content:center;padding:10px;cursor:zoom-out";o.innerHTML=`<img src="${src}" style="max-width:100%;max-height:100%;border-radius:8px">`;o.onclick=()=>o.remove();document.body.appendChild(o)}
-const copy=v=>navigator.clipboard?.writeText(v).then(()=>toast("Copied"),()=>toast(v));
-async function paid(id,btn){
-  if(!confirm("Mark as paid? Only do this after you sent the money."))return;btn.disabled=true;
-  try{await DB.collection("withdrawals").doc(id).update({status:"paid",at:Date.now()});toast("Marked paid.");draw()}catch(e){toast(e.message);btn.disabled=false}
-}
-async function refund(id,btn){
-  if(!confirm("Reject and refund the coins to the user?"))return;btn.disabled=true;
+    toast("Approved. ₹"+reward+" credited.");lu=0;draw();
+  }catch(e){t.disabled=false;throw e}
+ },
+ async reject(id,t){
+  if(!confirm("Reject this proof?"))return;t.disabled=true;
+  try{await DB.collection("submissions").doc(id).update({status:"rejected",at:Date.now()});toast("Rejected.");draw()}catch(e){t.disabled=false;throw e}
+ },
+ async paid(id,t){
+  if(!confirm("Mark as paid? Only do this after you have sent the money."))return;t.disabled=true;
+  try{await DB.collection("withdrawals").doc(id).update({status:"paid",at:Date.now()});toast("Marked paid.");lu=0;draw()}catch(e){t.disabled=false;throw e}
+ },
+ async refund(id,t){
+  if(!confirm("Reject this withdrawal and refund the coins to the user?"))return;t.disabled=true;
   try{
     const wref=DB.collection("withdrawals").doc(id),w=(await wref.get()).data(),uref=DB.collection("users").doc(w.uid);
-    await DB.runTransaction(async t=>{
-      const a=await t.get(wref);if(a.data().status!=="pending")throw new Error("Already handled.");
-      const u=(await t.get(uref)).data();
-      t.update(wref,{status:"rejected",at:Date.now()});t.update(uref,{uc:(u.uc||0)+(w.amt||0)});
+    await DB.runTransaction(async tx=>{
+      const a=await tx.get(wref);if(a.data().status!=="pending")throw new Error("Already handled.");
+      const u=(await tx.get(uref)).data();
+      tx.update(wref,{status:"rejected",at:Date.now()});tx.update(uref,{uc:(u.uc||0)+(w.amt||0)});
     });
-    toast("Rejected and refunded.");draw();
-  }catch(e){toast(e.message);btn.disabled=false}
-}
-async function usersView(){
-  const s=await DB.collection("users").limit(500).get();
-  users=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.joined||0)-(a.joined||0));
-  return `<input id="q" placeholder="Search name, email or referral code" oninput="q=this.value;list()" value="${E(q)}"><div id="ul"></div>`;
-}
-function list(){
-  const k=q.trim().toLowerCase(),l=users.filter(u=>!k||[u.name,u.email,u.code].some(v=>String(v||"").toLowerCase().includes(k)));
-  $("#ul").innerHTML=l.slice(0,100).map(u=>`<div class="card"><div class="row"><div><b>${E(u.name)}</b><div class="mute sm">${E(u.email)}</div><div class="mute sm">Code ${E(u.code)}${u.by?" · referred by "+E(u.by):""} · ${u.refs||0} referrals</div></div>
-  <div style="text-align:right"><b>${fmt(u.uc)} SC</b><div class="mute sm">earned ${fmt(u.earned)}</div></div></div><div class="acts"><button class="b l" onclick="adjust('${u.id}')">Adjust balance</button></div></div>`).join("")||'<p class="mute">No users found.</p>';
-}
-async function adjust(id){
-  const v=prompt("Add or remove coins. Example: 10 or -10");if(v===null)return;const n=Number(v);
-  if(!n||!isFinite(n))return toast("Enter a valid number.");
+    toast("Rejected and refunded.");lu=0;draw();
+  }catch(e){t.disabled=false;throw e}
+ },
+ async user(id){
+  const u=UM[id];if(!u)throw new Error("User not found.");
+  openModal('<p class="mute">Loading...</p>');
+  const s=await DB.collection("submissions").where("uid","==",id).get();
+  const ps=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.t-a.t),ws=wds.filter(w=>w.uid===id).sort((a,b)=>b.t-a.t);
+  const ref=users.find(x=>x.code&&x.code===u.by),paidT=ws.filter(w=>w.status==="paid").reduce((a,w)=>a+(w.amt||0),0),pend=ws.filter(w=>w.status==="pending").reduce((a,w)=>a+(w.amt||0),0);
+  openModal(`<div class="row"><div class="ur"><img class="av" style="width:56px;height:56px" src="${E(u.photo||AVD)}" alt="" referrerpolicy="no-referrer"><div><b style="font-size:18px">${E(u.name)}</b><span class="sm mute">${E(u.email)}</span></div></div><button class="b l s" data-a="close">Close</button></div>
+  <table class="kv" style="margin-top:12px"><tr><td>User ID</td><td>${cp(id)}</td></tr><tr><td>Google email</td><td>${cp(u.email)}</td></tr><tr><td>Balance</td><td><b>${fmt(u.uc)} SC</b></td></tr><tr><td>Total earned</td><td>${fmt(u.earned)} SC</td></tr>
+  <tr><td>Withdrawn (paid)</td><td>${fmt(paidT)} SC</td></tr><tr><td>Withdrawal pending</td><td>${fmt(pend)} SC</td></tr><tr><td>Referral code</td><td>${cp(u.code)}</td></tr>
+  <tr><td>Referred by</td><td>${u.by?E(u.by)+(ref?" ("+E(ref.name)+", "+E(ref.email)+")":""):"Nobody"}</td></tr><tr><td>Successful referrals</td><td>${u.refs||0}</td></tr>
+  <tr><td>Joined</td><td>${when(u.joined)}</td></tr><tr><td>Check-in streak</td><td>${u.streak||0} days (last ${E(u.last||"never")})</td></tr><tr><td>Last spin</td><td>${E(u.spin||"never")}</td></tr></table>
+  <div class="acts"><button class="b" data-a="adj" data-id="${id}">Adjust balance</button></div>
+  <h3>Proofs (${ps.length})</h3>${ps.length?ps.map(p=>`<div class="row" style="padding:8px 0;border-bottom:1px solid #F7ECCB"><div><b>${E((OFFERS[p.task]||[p.task])[0])}</b><div class="sm mute">${when(p.t)}</div></div><span class="chip ${p.status}">${p.status}</span></div>`).join(""):'<p class="mute sm">No proofs yet.</p>'}
+  <h3>Withdrawals (${ws.length})</h3>${ws.length?ws.map(w=>`<div class="row" style="padding:8px 0;border-bottom:1px solid #F7ECCB"><div><b>₹${fmt(w.amt)} ${w.kind==="bank"?"bank":"UPI"}</b><div class="sm mute">${when(w.t)}</div></div><span class="chip ${w.status}">${w.status}</span></div>`).join(""):'<p class="mute sm">No withdrawals yet.</p>'}`);
+ },
+ adj(id){
+  openModal(`<h2 style="font-size:20px">Adjust balance</h2><p class="mute sm" style="margin:4px 0 12px">${E((UM[id]||{}).name)} has ${fmt((UM[id]||{}).uc)} SC</p><input id="adjn" type="number" inputmode="decimal" min="0" placeholder="Enter amount in SC">
+  <div class="acts"><button class="b g" data-a="adjgo" data-id="${id}" data-v="1">Add coins</button><button class="b r" data-a="adjgo" data-id="${id}" data-v="-1">Remove coins</button></div><button class="b l" style="width:100%;margin-top:10px" data-a="close">Cancel</button>`);
+ },
+ async adjgo(id,t){
+  const n=Number($("#adjn").value)*Number(t.dataset.v);
+  if(!n||!isFinite(n))throw new Error("Enter a valid amount.");
+  t.disabled=true;const uref=DB.collection("users").doc(id);
   try{
-    const uref=DB.collection("users").doc(id);
-    await DB.runTransaction(async t=>{const u=(await t.get(uref)).data();if((u.uc||0)+n<0)throw new Error("Balance cannot go below zero.");t.update(uref,{uc:(u.uc||0)+n,...(n>0?{earned:(u.earned||0)+n}:{})})});
-    toast("Balance updated.");draw();
-  }catch(e){toast(e.message)}
-}
-async function login(){$("#err").textContent="";try{await AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider())}catch(e){$("#err").textContent="Sign-in failed."}}
-function out(){AUTH.signOut()}
+    await DB.runTransaction(async tx=>{const u=(await tx.get(uref)).data();if((u.uc||0)+n<0)throw new Error("Balance cannot go below zero.");tx.update(uref,{uc:(u.uc||0)+n,...(n>0?{earned:(u.earned||0)+n}:{})})});
+    closeModal();toast("Balance updated.");lu=0;draw();
+  }catch(e){t.disabled=false;throw e}
+ }
+};
+document.addEventListener("click",async e=>{
+  if(e.target.id==="md"){closeModal();return}
+  const t=e.target.closest("[data-a]");if(!t||t.disabled)return;
+  try{await ACT[t.dataset.a]?.(t.dataset.id,t)}catch(err){toast(err.message||"Something went wrong.")}
+});
+document.addEventListener("input",e=>{if(e.target.id==="q"){q=e.target.value;showUsers()}});
+
 firebase.initializeApp(FB);AUTH=firebase.auth();DB=firebase.firestore();
 AUTH.onAuthStateChanged(async u=>{
   if(!u){$("#app").hidden=true;$("#login").hidden=false;return}
   try{await DB.collection("submissions").limit(1).get()}
-  catch(e){$("#err").textContent="Access denied. This Google account is not the admin.";AUTH.signOut();return}
-  $("#login").hidden=true;$("#app").hidden=false;$("#who").textContent=u.email;draw();
+  catch(e){$("#err").textContent="Access denied. This Google account is not the admin (check your Firestore rules).";AUTH.signOut();return}
+  $("#login").hidden=true;$("#app").hidden=false;$("#who").textContent=u.email;draw(true);
 });
 </script>
 </body>
